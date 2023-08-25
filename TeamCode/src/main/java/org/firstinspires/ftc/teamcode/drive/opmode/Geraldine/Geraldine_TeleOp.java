@@ -47,7 +47,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Geraldine SPARKmini", group="Geraldine")
+@TeleOp(name="Geraldine TeleOp", group="Geraldine")
 public class Geraldine_TeleOp extends LinearOpMode {
 
     // Declare OpMode members.
