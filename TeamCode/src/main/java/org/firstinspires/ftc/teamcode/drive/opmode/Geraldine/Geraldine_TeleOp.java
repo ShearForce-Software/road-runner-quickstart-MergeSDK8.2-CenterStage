@@ -55,6 +55,8 @@ public class Geraldine_TeleOp extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
     private DcMotorSimple lift = null;
     private DcMotorSimple twist = null;
+    private DcMotorSimple left_mouth = null;
+    private DcMotorSimple right_mouth = null;
     private double scale = .25;
     private DigitalChannel right_swivel;
     private DigitalChannel left_swivel;
@@ -74,6 +76,7 @@ public class Geraldine_TeleOp extends LinearOpMode {
         // step (using the FTC Robot Controller app on the phone).
         twist  = hardwareMap.get(DcMotorSimple.class, "twist");
         lift = hardwareMap.get(DcMotorSimple.class, "lift");
+
         right_swivel = hardwareMap.get(DigitalChannel.class, "right_swivel");
         left_swivel = hardwareMap.get(DigitalChannel.class, "left_swivel");
         low_arm = hardwareMap.get(DigitalChannel.class, "low_arm");
