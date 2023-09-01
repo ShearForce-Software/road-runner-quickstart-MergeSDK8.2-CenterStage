@@ -35,7 +35,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
+import com.qualcomm.robotcore.hardware.Servo;
 
 /**
  *
@@ -54,9 +54,9 @@ public class Geraldine_TeleOp extends LinearOpMode {
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
     private DcMotorSimple lift = null;
-    private DcMotorSimple twist = null;
-    private DcMotorSimple left_mouth = null;
-    private DcMotorSimple right_mouth = null;
+    //private DcMotorSimple twist = null; // Disabled for Duchesne showcase
+    private Servo left_mouth = null;
+    private Servo right_mouth = null;
     private double scale = .25;
     private DigitalChannel right_swivel;
     private DigitalChannel left_swivel;
@@ -74,21 +74,25 @@ public class Geraldine_TeleOp extends LinearOpMode {
         // Initialize the hardware variables. Note that the strings used here as parameters
         // to 'get' must correspond to the names assigned during the robot configuration
         // step (using the FTC Robot Controller app on the phone).
-        twist  = hardwareMap.get(DcMotorSimple.class, "twist");
-        lift = hardwareMap.get(DcMotorSimple.class, "lift");
-
+        // Servos below
+        left_mouth = hardwareMap.get(Servo.class, "left_mouth");
+        right_mouth = hardwareMap.get(Servo.class, "right_mouth");
+        //Touch sensors below
         right_swivel = hardwareMap.get(DigitalChannel.class, "right_swivel");
         left_swivel = hardwareMap.get(DigitalChannel.class, "left_swivel");
         low_arm = hardwareMap.get(DigitalChannel.class, "low_arm");
         high_arm = hardwareMap.get(DigitalChannel.class, "high_arm");
+        //Motors below
         leftFrontDrive  = hardwareMap.get(DcMotor.class, "left_front_drive");
         leftBackDrive  = hardwareMap.get(DcMotor.class, "left_back_drive");
         rightFrontDrive = hardwareMap.get(DcMotor.class, "right_front_drive");
         rightBackDrive = hardwareMap.get(DcMotor.class, "right_back_drive");
+        //twist  = hardwareMap.get(DcMotorSimple.class, "twist");
+        lift = hardwareMap.get(DcMotor.class, "lift");
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backward when connected directly to the battery
         lift.setDirection(DcMotorSimple.Direction.REVERSE);
-        twist.setDirection(DcMotorSimple.Direction.REVERSE);
+        //twist.setDirection(DcMotorSimple.Direction.REVERSE);
         leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
         leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
         rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
@@ -104,7 +108,7 @@ public class Geraldine_TeleOp extends LinearOpMode {
             // Setup a variable for each drive wheel to save power level for telemetry
             double max;
             double liftPower;
-            double twistPower;
+            //double twistPower;
             double axial   = -gamepad1.left_stick_y;  // Note: pushing stick forward gives negative value
             double lateral =  gamepad1.left_stick_x;
             double yaw     =  gamepad1.right_stick_x;
@@ -120,7 +124,7 @@ public class Geraldine_TeleOp extends LinearOpMode {
             max = Math.max(max, Math.abs(leftBackPower));
             max = Math.max(max, Math.abs(rightBackPower));
             liftPower = -gamepad2.left_stick_y;
-            twistPower  =  gamepad2.right_stick_x;
+            //twistPower  =  gamepad2.right_stick_x;
            // leftPower    = Range.clip(drive + turn, -1.0, 1.0) ;
            // rightPower   = Range.clip(drive - turn, -1.0, 1.0) ;
             if (max > 1.0) {
@@ -136,7 +140,7 @@ public class Geraldine_TeleOp extends LinearOpMode {
 
             // Send calculated power to wheels
             lift.setPower(liftPower*scale);
-            twist.setPower(twistPower*scale);
+            //twist.setPower(twistPower*scale);
             leftFrontDrive.setPower(leftFrontPower*scale);
             rightFrontDrive.setPower(rightFrontPower*scale);
             leftBackDrive.setPower(leftBackPower*scale);
@@ -161,6 +165,7 @@ public class Geraldine_TeleOp extends LinearOpMode {
             if (low_arm.getState() == true)
             {
                 telemetry.addData("Digital Touch", "");
+
             }
             else
             {
@@ -169,16 +174,34 @@ public class Geraldine_TeleOp extends LinearOpMode {
             if (high_arm.getState() == true)
             {
                 telemetry.addData("Digital Touch", "");
+
             }
             else
             {
                 telemetry.addData("Digital Touch", "Stop");
             }
+
+            if (gamepad1.left_bumper)
+            {
+                left_mouth.setPosition(1);
+                right_mouth.setPosition((0));
+            }
+            else if (gamepad1.right_bumper)
+            {
+                left_mouth.setPosition(0);
+                right_mouth.setPosition((1));
+            }
+            else
+            {
+                left_mouth.setPosition(.5);
+                right_mouth.setPosition((.5));
+            }
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.addData("Front left/Right", "%4.2f, %4.2f", leftFrontPower, rightFrontPower);
             telemetry.addData("Back  left/Right", "%4.2f, %4.2f", leftBackPower, rightBackPower);
-            telemetry.addData("Motors", "left (%.2f), right (%.2f)", liftPower, twistPower);
+            telemetry.addData("Servos", "left (%.2f), right (%.2f)", left_mouth.getPosition(), right_mouth.getPosition());
+            telemetry.addData("Motors", "left (%.2f), right (%.2f)", liftPower); //Twist power is temporarily deleted
             telemetry.update();
         }
     }
