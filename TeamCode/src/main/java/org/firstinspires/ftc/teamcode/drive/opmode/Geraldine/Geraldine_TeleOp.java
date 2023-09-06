@@ -58,7 +58,8 @@ public class Geraldine_TeleOp extends LinearOpMode {
     //private DcMotorSimple twist = null; // Disabled for Duchesne showcase
     private CRServo left_mouth = null;
     private CRServo right_mouth = null;
-    private double scale = .5;
+    private double scale_arm = .5;
+    private double scale_drive = .33;
     private DigitalChannel right_swivel;
     private DigitalChannel left_swivel;
     private DigitalChannel low_arm;
@@ -152,10 +153,10 @@ public class Geraldine_TeleOp extends LinearOpMode {
 
             //lift.setPower(liftPower*scale);
             //twist.setPower(twistPower*scale);
-            leftFrontDrive.setPower(leftFrontPower*scale);
-            rightFrontDrive.setPower(rightFrontPower*scale);
-            leftBackDrive.setPower(leftBackPower*scale);
-            rightBackDrive.setPower(rightBackPower*scale);
+            leftFrontDrive.setPower(leftFrontPower*scale_drive);
+            rightFrontDrive.setPower(rightFrontPower*scale_drive);
+            leftBackDrive.setPower(leftBackPower*scale_drive);
+            rightBackDrive.setPower(rightBackPower*scale_drive);
             if (right_swivel.getState() == true)
             {
             }
@@ -185,7 +186,7 @@ public class Geraldine_TeleOp extends LinearOpMode {
             }
             else
             {
-                lift.setPower(liftPower*scale);
+                lift.setPower(liftPower*scale_arm);
 
 
             }
