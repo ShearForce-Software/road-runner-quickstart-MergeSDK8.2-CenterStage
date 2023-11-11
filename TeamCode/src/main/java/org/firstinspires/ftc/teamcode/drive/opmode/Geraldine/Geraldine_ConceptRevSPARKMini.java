@@ -49,6 +49,7 @@ import com.qualcomm.robotcore.util.Range;
  */
 
 @TeleOp(name="Geraldine SPARKmini", group="Concept")
+@Disabled
 public class Geraldine_ConceptRevSPARKMini extends LinearOpMode {
 
     // Declare OpMode members.
